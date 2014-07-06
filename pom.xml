@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>dma.oozie.jobs</groupId>
+	<artifactId>dma.oozie.jobs</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+	<properties>
+		<oozieVersion>4.0.0-cdh5.0.1</oozieVersion>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>cloudera</id>
+			<url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+		</repository>
+	</repositories>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.oozie</groupId>
+			<artifactId>oozie-client</artifactId>
+			<version>${oozieVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.oozie</groupId>
+			<artifactId>oozie-core</artifactId>
+			<version>${oozieVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.oozie</groupId>
+			<artifactId>oozie-examples</artifactId>
+			<version>${oozieVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.oozie</groupId>
+			<artifactId>oozie-sharelib-oozie</artifactId>
+			<version>${oozieVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.oozie</groupId>
+			<artifactId>oozie-tools</artifactId>
+			<version>${oozieVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-hadoop</artifactId>
+			<version>2.0.0.RELEASE</version>
+		</dependency>
+	</dependencies>
+</project>
