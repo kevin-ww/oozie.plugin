@@ -1,18 +1,51 @@
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collection;
 
-import org.apache.hadoop.util.Shell.ExitCodeException;
-import org.apache.hadoop.util.Shell.ShellCommandExecutor;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.hadoop.fs.FsShell;
 
 public class AddPartitionAction {
   //
   private static Logger LOG = LoggerFactory.getLogger(AddPartitionAction.class);
 
+  private static String HDFS_DIR_PATTERN =
+      "/hs/dmaphase1/dmaevent/year=%04d/month=%02d/day=%02d/hour=%02d/type=%s";
+
+  private static String TEMP_SNAPPY_FILE_SUFFIX = ".snappy.tmp";
+
+  private static FsShell fsShell = new FsShell(new Configuration());
+
+  public static void execute(int year, int month, int day, int hour, String type) {
+
+    String hdfsDir =
+        String.format(HDFS_DIR_PATTERN, year, month, day, hour, type);
+
+    Collection<FileStatus> files = fsShell.ls(hdfsDir);
+    LOG.info("files under this directory are : [\n" + files.toString() + "\n]");
+    for (FileStatus file : files) {
+      if (file.isFile()) {
+        String fileName = file.getPath().getName();
+        if (fileName.endsWith(TEMP_SNAPPY_FILE_SUFFIX)) {
+          LOG.info("having data stream , try later ");
+          return;
+        }
+      }
+    }
+    // add partition;
+
+    //
+  }
+
+  public static boolean isValid() {
+    return true;
+  }
+
   public static void main(String[] args) throws Exception {
+
+    execute(2014, 6, 1, 0, "dmaevent");
 
     // get current time;
     // extract parameters from current time like year,month,day and hour.
@@ -24,6 +57,10 @@ public class AddPartitionAction {
     // been executed successfully
 
     //
+
+  }
+
+  public void test() {
     Calendar now = Calendar.getInstance();
 
     int year = now.get(Calendar.YEAR);
@@ -37,24 +74,6 @@ public class AddPartitionAction {
     String command = String.format(commandPattern, year, month, day, hour, min);
 
     System.out.println(command);
-
-    String[] commandArgs =
-        { "ls", "/home/kvn/workspace/zx.solution/hs.v2/dmaooziejob/scripts" };
-    // { command };
-
-    String output = exec(commandArgs);
-    System.out.println(output);
   }
 
-  public static String exec(final String[] args) throws Exception {
-
-    ShellCommandExecutor shexec = new ShellCommandExecutor(args);
-
-    LOG.info("now executing shell command "
-        + Arrays.toString(shexec.getExecString()));
-    shexec.execute();
-
-    return shexec.getOutput();
-
-  }
 }

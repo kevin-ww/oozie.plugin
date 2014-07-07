@@ -1,4 +1,8 @@
+import java.util.Collection;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.Path;
 import org.springframework.data.hadoop.fs.FsShell;
 
 public class Test {
@@ -10,11 +14,12 @@ public class Test {
     // use spring api
     FsShell fsShell = new FsShell(configuration);
     String dir = "/hs";
-    String r = fsShell.ls(dir).toString();
-    System.out.println(r);
-    // use hadoop api
-    org.apache.hadoop.fs.FsShell shell = new org.apache.hadoop.fs.FsShell(configuration);
-
-    // String x = shell.
+    Collection<FileStatus> files = fsShell.ls(dir);
+    for (FileStatus file : files) {
+      System.out.println(file.toString());
+      Path p = file.getPath();
+      String name = p.getName();
+      System.out.println(name);
+    }
   }
 }
