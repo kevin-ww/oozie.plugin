@@ -1,7 +1,5 @@
 package com.zxinsight.oozie;
 
-import java.util.Calendar;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +14,22 @@ public class ImpalaAddPartitionAction {
 
   public void execute(String tblName, int year, int month, int day, int hour,
       String type) {
-    LOG.info("to see if necessary to add partition");
+    JobParameters jobParameters =
+        new JobParameters(tblName, year, month, day, hour, type);
+    execute(jobParameters);
+  }
+
+  public void execute(JobParameters jobParameters) {
+
+    LOG.info("to add partition");
+
+    String tblName = jobParameters.getTblName();
+    int year = jobParameters.getYear();
+    int month = jobParameters.getMonth();
+    int day = jobParameters.getDay();
+    int hour = jobParameters.getHour();
+    String type = jobParameters.getType();
+
     boolean accept =
         !shellAction.isWritingData(tblName, year, month, day, hour, type);
     if (accept) {
@@ -26,6 +39,8 @@ public class ImpalaAddPartitionAction {
   }
 
   public static void main(String[] args) throws Exception {
+
+    // JobParameters jobParams = ImpalaAddPartitionAction.convert(args);
 
     // get current time;
     // extract parameters from current time like year,month,day and hour.
@@ -38,25 +53,10 @@ public class ImpalaAddPartitionAction {
 
     //
 
-    new ImpalaAddPartitionAction().execute("dmaevent", 2014, 6, 1, 0,
-        "dmaevent");
+    JobParameters jobParams = new JobParameters(args);
 
-  }
+    new ImpalaAddPartitionAction().execute(jobParams);
 
-  public void test() {
-    Calendar now = Calendar.getInstance();
-
-    int year = now.get(Calendar.YEAR);
-    int month = now.get(Calendar.MONTH) + 1;
-    int day = now.get(Calendar.DAY_OF_MONTH);
-    int hour = now.get(Calendar.HOUR_OF_DAY);
-    int min = now.get(Calendar.MINUTE);
-
-    String commandPattern =
-        "hdfs dfs -ls -R hdfs://hdnode1:8020/hs/dmaphase1/dmaevent/year=%04d/month=%02d/day=%02d/hour=%02d";
-    String command = String.format(commandPattern, year, month, day, hour, min);
-
-    System.out.println(command);
   }
 
 }

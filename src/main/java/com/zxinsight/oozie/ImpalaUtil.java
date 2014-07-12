@@ -16,8 +16,7 @@ public class ImpalaUtil {
   static {
     @SuppressWarnings("resource")
     AbstractApplicationContext context =
-        new ClassPathXmlApplicationContext("jdbc-context.xml",
-            ImpalaUtil.class);
+        new ClassPathXmlApplicationContext("jdbc-context.xml", ImpalaUtil.class);
     context.registerShutdownHook();
 
     jdbcTemplate = (JdbcTemplate) context.getBean("jdbcTemplate");
